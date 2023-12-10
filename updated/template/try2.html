@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomePage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js" crossorigin="anonymous"></script>
+    <style>
+        /* Reset some default styles */
+        body, h1, p, div {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* Define the container for the three divs */
+        .container {
+            display: flex;
+            max-width: 1700px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
+        }
+
+        /* Style for each of the three divs */
+        .section1{
+            content: center;
+            width: 8cm;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 20px; /* Create gaps between divs */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-height: 300px; /* Set a minimum height to make divs long vertically */
+            height: 15cm;
+        }
+        .section2{
+            flex: 1; /* Distribute available space equally */
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-right: 20px; /* Create gaps between divs */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-height: 300px; /* Set a minimum height to make divs long vertically */
+        }
+        .section3{
+           width: 12cm;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-right: 0px; /* Create gaps between divs */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-height: 300px; /* Set a minimum height to make divs long vertically */
+        }
+
+
+        /* Remove the right margin from the last div */
+        .section1:last-child {
+            margin-right: 0;
+        }
+        .messages{
+            overflow: hidden;
+            height: 10cm;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section1">
+            {% for cond in side%}
+            <img class="w-full rounded-xl" src="data:image/png;base64,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" alt="Network error">
+            <img  class="ml-[2.7cm] -mt-[1cm] h-[2cm] w-[2cm] rounded-full" src="https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.webp?b=1&s=170667a&w=0&k=20&c=MRMqc79PuLmQfxJ99fTfGqHL07EDHqHLWg0Tb4rPXQc=" alt="">
+            <p class="text-center text-xl font-bold mt-[0.4cm]">{{cond[2]}}</p>
+            <p class="text-center font-extralight text-slate-400">{{cond[4]}}</p>
+            {%if cond[4]=='recruiter'%}
+            <p class="text-center font-extralight text-slate-400 mt-12">Working for GOOGLE corp</p>
+            {%else%}
+            <p class="text-center font-extralight text-slate-400 mt-12">Looking forward to work in {{cond[5]}}</p>
+            {%endif%}
+            {%if cond[4]=='recruiter'%}
+            <div class="flex ml-[1.9cm]">
+                <a href="http://127.0.0.1:5000/skill" class="p-[0.2cm] w-[4cm] border-2 border-sky-200 rounded-xl mt-12 bg-sky-200 -ml-[0.5cm]"><button >Enter required skills</button></a> 
+            </div>
+            {%endif%}
+            {%endfor%}
+            {% if reqs!='' %}
+            <p class="text-center font-extralight text-slate-400">Looking for requirments</p>
+            <br>
+            <p class="text-center font-extralight text-slate-400 -mt-[0.5cm]">{{reqs}}</p>
+            {%else%}
+            {%endif%}
+        </div>
+
+
+
+
+        <div class="section2">
+                <form action="" class="flex">
+                <input type="text" name="field1" id="" placeholder="                 Enter Position" class="w-[7cm] border-2" required> 
+                <input type="text" name="field2" id="" placeholder="                 Enter Company" class="w-[7cm] ml-[1cm] border-2" required>                                                                                       
+                <input type="submit" name="" value="Search" class="w-[4cm] bg-sky-500 h-[1cm] ml-[1cm]">
+                </form>    
+            {% for nameee in info %}
+            <div class="rounded-xl mt-[1cm] bg-slate-300 p-[0.5cm]">
+                <div class="flex bg-slate-300">
+                        <img src="{{nameee[4]}}" class="w-[2cm] rounded-3xl" alt="Image not posted">
+                        <div>
+                            <h1 class="text-3xl font-bold">{{nameee[0]}}</h1>
+                            <p class="font-extralight ml-[0.1cm] text-sm">{{nameee[1]}}</p>
+                            {% if value!=True %}
+                            <p class="font-extralight ml-[0.1cm] text-sm">{{nameee[6]}}%</p>
+                            {%endif%}
+                        </div>
+                </div>
+                <h1 class="text-justify">{{nameee[3]}}</h1>
+                <a href="{{nameee[5]}}" class="text-sky-400">Learn more...</a>  
+                <br>
+                <div class="flex">
+                    <button class="w-[2.4cm] -mt-[0.2cm] mb-[0.2cm] ml-[12.5cm] border-lime-400 p-1 border-2 rounded-2xl hover:bg-lime-500 duration-200">Contact</button>
+                    <button class="-mt-[0.2cm] mb-[0.2cm] ml-[0.1cm] border-amber-200 p-1 border-2 rounded-2xl hover:bg-amber-500 duration-200">Favourite</button>
+                </div>  
+            </div>
+            {% endfor %}
+           
+        </div>
+
+        <div class="section3">
+            <p class="font-bold text-3xl ml-[2cm]">Chat Section</p>
+            <div class="messages">
+                <input placeholder="                           message" id="messageInput" class="w-[9cm] rounded-md p-[0.2cm] border-2">
+            </div>
+        
+            <script>
+                const socket=io();
+                
+                let messageContainer= document.querySelector(".messages")
+        
+                socket.on("connect",()=> {
+                    let p=document.createElement("p")
+                    p.innerText="You're Online"
+                    p.className="ml-[3cm] mt-[0.2cm]"
+                    messageContainer.appendChild(p)
+                })
+        
+                let messageInput=document.getElementById("messageInput")
+                messageInput.addEventListener("keypress",(e)=>{
+                    if (e.which===13){
+                        socket.emit("message",messageInput.value)
+                        messageInput.value=""
+                    }
+                })
+        
+                socket.on('message',(message)=> {
+                    let messageElement=document.createElement("p")
+                    messageElement.innerText=message
+                    messageElement.className="bg-sky-400 rounded-b-xl rounded-l-xl p-[0.2cm] mt-[0.3cm]"
+                    messageContainer.appendChild(messageElement)
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Information Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="">
+    <h1 class="text-center text-3xl font-bold mt-[3cm] font-mono">Enter Requirments</h1>
+        <div class="w-[14cm] text-center ml-[4cm] mt-[2cm] rounded-md">
+        <div class="form-group">
+          <form action="http://127.0.0.1:5000/skill" method="POST" class="-mt-[1cm]">
+                
+                <h2 class="text-xl font-mono font-semibold ml-[7.5cm]">Skills</h2>
+                <input type="text" name='skills' required class="ml-[7cm] mb-[1cm] w-72 p-3 rounded-md mt-[1cm]  shadow-xl hover:border-2 hover:border-rose-500 duration-75">
+                <br>
+                <h2 class="text-xl font-mono font-semibold ml-[7.5cm]">Country</h2>
+                <input type="text" name='country' required class="w-72 p-3 ml-[7cm] mb-[1cm] shadow-xl rounded-md hover:border-2 hover:border-rose-500 duration-75">
+                <br>
+                <h2 class="text-xl font-mono font-semibold ml-[7.5cm]">state</h2>
+                <input type="text" name='state' required class="w-72 p-3 ml-[7cm] mb-[1cm] shadow-xl rounded-md hover:border-2 hover:border-rose-500 duration-75">
+                <br>
+                <input type="submit" value="Submit" class="bg-rose-500 w-[7.7cm] font-extralight p-2 rounded-md ml-[7cm] hover:shadow-2xl duration-200">
+          </form>
+        </div>
+        
+</body>
+</html>
