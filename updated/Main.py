@@ -145,7 +145,7 @@ def start():
         if request.method=='POST':
              rol=request.form['field1']
              comp=request.form['field2']
-             api_key = 'icD6s2qWEm5kNuIDuutLkA'
+             api_key = 'hehe_get your own key_hehe'
              headers = {'Authorization': 'Bearer ' + api_key}
              api_endpoint ='https://nubela.co/proxycurl/api/find/company/role/'
              params = {
